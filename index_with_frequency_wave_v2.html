@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09001c">
+<meta name="description" content="Deep Healing Vibes — Solfeggio and Solfeggio-based binaural beats">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="./dhv-icon-v22.svg">
+<title>Deep Healing Vibes</title>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#09001c;--panel:rgba(16,1,35,.72);--violet:#a83cff;--gold:#ffd15c;--text:#fffaff;--muted:#d8b9ed}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+body{min-height:100vh;display:flex;justify-content:center;background:radial-gradient(circle at 50% 22%,rgba(105,24,170,.28),transparent 32%),radial-gradient(circle at 50% 65%,rgba(92,18,185,.18),transparent 42%),linear-gradient(145deg,#05000f,#12002b 52%,#06000f)}
+.app{width:min(100%,720px);padding:28px 20px 34px}
+h1{margin:12px 0 5px;text-align:center;font-weight:300;letter-spacing:.22em;font-size:clamp(28px,7vw,42px);color:#ffdca0}
+.sub{text-align:center;letter-spacing:.30em;color:#d6a4f7;font-size:12px;margin-bottom:22px}
+.line{height:2px;background:linear-gradient(90deg,transparent,#6f1aff,#ffd15c,#6f1aff,transparent);box-shadow:0 0 14px #9a36ff;margin:0 0 25px}
+.phrase{text-align:center;letter-spacing:.30em;color:#dba9fa;font-size:12px;margin-bottom:25px}
+.card{background:var(--panel);border:1px solid rgba(139,40,255,.55);border-radius:26px;padding:22px 16px 20px;box-shadow:inset 0 0 28px rgba(168,60,255,.07),0 0 18px rgba(70,0,130,.18);margin-bottom:18px}
+.frequency-visual{margin:0 0 18px;padding:18px 14px 14px;border:1px solid rgba(139,40,255,.55);border-radius:22px;background:rgba(9,0,28,.62);box-shadow:inset 0 0 28px rgba(168,60,255,.08),0 0 18px rgba(70,0,130,.16);text-align:center}
+.wave-stage{position:relative;height:112px;overflow:hidden;border-radius:16px;background:radial-gradient(ellipse at center,rgba(124,58,237,.16),transparent 65%)}
+.wave-stage::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(216,185,237,.12)}
+#waveCanvas{display:block;width:100%;height:100%}
+.wave-caption{margin-top:7px;color:var(--gold);font-size:11px;letter-spacing:.22em}
+.wave-value{font-size:26px;color:#fffaff;font-weight:500;margin-top:3px}
+.wave-status{font-size:9px;color:#d8b9ed;letter-spacing:.22em;margin-top:3px}
+.frequency-visual.playing .wave-stage{box-shadow:inset 0 0 28px rgba(168,60,255,.08),0 0 24px rgba(168,60,255,.14)}
+.section-title{text-align:center;color:var(--gold);font-size:20px;letter-spacing:.16em;margin-bottom:6px}
+.section-sub{text-align:center;color:#d8a9f5;font-size:11px;letter-spacing:.18em;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.freq{min-height:88px;border:1px solid #8b28ff;border-radius:22px;background:rgba(60,8,110,.52);color:#fff;cursor:pointer;font-size:25px;font-weight:500;box-shadow:inset 0 0 15px rgba(168,60,255,.08)}
+.freq span{display:block;font-size:13px;margin-top:1px;letter-spacing:.08em}
+.freq.active{border-color:var(--gold);box-shadow:0 0 20px rgba(255,209,92,.25),inset 0 0 18px rgba(168,60,255,.16);color:var(--gold)}
+.player{display:flex;align-items:center;justify-content:center;gap:30px;margin:24px 0 20px}
+.play{width:118px;height:118px;border-radius:50%;border:3px solid var(--gold);background:radial-gradient(circle,#34106a,#15012f 65%);color:var(--gold);font-size:42px;cursor:pointer;box-shadow:0 0 28px rgba(168,60,255,.38)}
+.play.stop-mode{font-size:31px}
+.now{text-align:left;min-width:150px}
+.now-freq{font-size:32px;color:var(--gold);letter-spacing:.04em}
+.now-state{font-size:12px;color:#d8b9ed;letter-spacing:.28em;margin-top:5px}
+.volume{display:grid;grid-template-columns:76px 1fr 52px;align-items:center;gap:12px;color:#d9b7ed;font-size:12px;letter-spacing:.12em}
+input[type=range]{width:100%;accent-color:#a83cff}
+.install{display:block;width:100%;padding:17px;border:2px solid var(--gold);border-radius:22px;background:rgba(65,19,80,.35);color:var(--gold);font-size:18px;letter-spacing:.24em;cursor:pointer;box-shadow:0 0 22px rgba(255,209,92,.18);margin:20px 0}
+.install small{display:block;color:#d8b9ed;font-size:10px;letter-spacing:.14em;margin-top:6px}
+.binaural .note{text-align:center;color:#d8b9ed;font-size:11px;line-height:1.5;margin:0 auto 16px;max-width:570px}
+.b-freq-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-bottom:14px}
+.b-freq{padding:10px 2px;border-radius:16px;border:1px solid #8b28ff;background:rgba(60,8,110,.45);color:#fff;font-size:12px;cursor:pointer}
+.b-freq.active{border-color:var(--gold);color:var(--gold);box-shadow:0 0 15px rgba(255,209,92,.24)}
+.beat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.beat{min-height:68px;padding:8px 3px;border-radius:16px;border:1px solid #8b28ff;background:rgba(60,8,110,.45);color:#fff;font-size:12px;cursor:pointer}
+.beat small{font-size:9px;color:#c99ae8}
+.beat.active{border-color:var(--gold);color:var(--gold);box-shadow:0 0 16px rgba(255,209,92,.25)}
+.ears{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px}
+.ear{padding:14px 5px;border-radius:18px;background:rgba(9,0,28,.55);text-align:center}
+.ear-label{display:block;color:#d8b9ed;font-size:9px;letter-spacing:.16em;margin-bottom:5px}
+.ear-value{font-size:22px;color:#fff}
+.ear-value span{font-size:10px;color:#c987f5}
+.ear small{display:block;color:#9f72bd;font-size:9px;margin-top:4px}
+.b-player{display:flex;align-items:center;justify-content:center;gap:18px;margin:20px 0 14px}
+.b-player .play{width:88px;height:88px;font-size:30px}
+.b-player-text{display:flex;flex-direction:column;gap:5px;color:var(--gold);letter-spacing:.14em}
+.b-player-text span{color:#d8b9ed;font-size:11px}
+.headphones{text-align:center;color:#c99ae8;font-size:11px;letter-spacing:.06em;margin-top:16px}
+.footer{text-align:center;color:#c99ae8;letter-spacing:.28em;font-size:11px;margin-top:22px}
+@media(max-width:520px){
+.app{padding:22px 12px 28px}
+.grid{gap:9px}.freq{min-height:78px;font-size:21px}
+.player{gap:18px}.play{width:100px;height:100px}.now-freq{font-size:28px}.now{min-width:130px}
+.b-freq-grid{grid-template-columns:repeat(6,1fr)}.b-freq{font-size:10px;padding:9px 1px}
+}
+</style>
+
+<style id="dhv-legal-css">
+.dhv-legal{display:block;position:relative;clear:both;float:none;width:100%;max-width:720px;margin:32px auto 16px;padding:0;text-align:center;box-sizing:border-box}
+.dhv-legal-links{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:100%}
+.dhv-legal-links button{background:none;border:0;color:rgba(255,255,255,.62);font:inherit;font-size:12px;cursor:pointer;padding:5px 7px}
+.dhv-legal-links button:hover{color:#f4c76b}
+.dhv-legal-copy{display:block;margin-top:8px;color:rgba(255,255,255,.35);font-size:10px;text-align:center;width:100%}
+.dhv-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,3,20,.78);backdrop-filter:blur(10px)}
+.dhv-modal.open{display:flex}
+.dhv-card{width:min(680px,100%);max-height:82vh;overflow:auto;border:1px solid rgba(210,126,255,.25);border-radius:20px;padding:24px;background:linear-gradient(160deg,#17112e,#0b0a1c);box-shadow:0 20px 70px rgba(0,0,0,.5);color:rgba(255,255,255,.86);text-align:left}
+.dhv-card h2{margin:0 0 14px;color:#f4c76b;font-size:20px}
+.dhv-card h3{margin:18px 0 7px;color:#e5b6ff;font-size:14px}
+.dhv-card p{font-size:13px;line-height:1.65;margin:8px 0}
+.dhv-close{float:right;background:none;border:0;color:rgba(255,255,255,.65);font-size:24px;cursor:pointer}
+</style>
+
+<style id="dhv-page-layout">
+html,body{min-height:100%}
+body{display:flex!important;flex-direction:column!important;justify-content:flex-start!important;align-items:stretch!important}
+main.app{display:block!important;width:min(100%,720px)!important;margin:0 auto!important;flex:0 0 auto!important;box-sizing:border-box!important}
+.dhv-legal{display:block!important;position:relative!important;width:100%!important;max-width:720px!important;margin:28px auto 16px!important;padding:0!important;float:none!important;clear:both!important;flex:0 0 auto!important;align-self:center!important;box-sizing:border-box!important;text-align:center!important}
+.dhv-legal-links{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;width:100%!important;gap:3px!important}
+.dhv-legal-copy{display:block!important;width:100%!important;text-align:center!important;margin-top:8px!important}
+</style>
+</head>
+<body>
+<main class="app">
+<h1>DEEP HEALING VIBES</h1>
+<div class="sub">SOUND • BALANCE • HIGHER SELF</div>
+<div class="line"></div>
+<div class="phrase">TUNE • HEAL • BE • MORE</div>
+
+<section class="frequency-visual" id="frequencyVisual" aria-label="Visual frequency wave">
+  <div class="wave-stage">
+    <canvas id="waveCanvas"></canvas>
+  </div>
+  <div class="wave-caption">CURRENT FREQUENCY</div>
+  <div class="wave-value" id="waveValue">432 Hz</div>
+  <div class="wave-status" id="waveStatus">READY</div>
+</section>
+
+<section class="card">
+<div class="section-title">SOLFEGGIO FREQUENCIES</div>
+<div class="section-sub">ANCIENT VIBRATIONS FOR A HIGHER YOU</div>
+<div class="grid" id="grid"></div>
+<div class="player">
+<button class="play" id="play" aria-label="Play or stop">▶</button>
+<div class="now"><div class="now-freq" id="nowFreq">432 Hz</div><div class="now-state" id="nowState">READY</div></div>
+</div>
+<div class="volume"><span>VOLUME</span><input id="volume" type="range" min="0" max="100" value="70"><span id="pct">70%</span></div>
+</section>
+
+<section class="card binaural">
+<div class="section-title">BINAURAL BEATS (SOLFEGGIO BASED)</div>
+<div class="section-sub">TWO TONES • ONE MIND • DEEPER STATES</div>
+<p class="note">Select a Solfeggio frequency and a brainwave state. The binaural beat is created using that frequency.</p>
+<div class="b-freq-grid" id="bFreqGrid"></div>
+<div class="beat-grid" id="beatGrid"></div>
+<div class="ears">
+<div class="ear"><span class="ear-label">LEFT EAR</span><div class="ear-value" id="leftTone">432 <span>Hz</span></div></div>
+<div class="ear"><span class="ear-label">BINAURAL BEAT</span><div class="ear-value" id="beatTone">10 <span>Hz</span></div></div>
+<div class="ear"><span class="ear-label">RIGHT EAR</span><div class="ear-value" id="rightTone">442 <span>Hz</span></div><small id="rightFormula">(432 + 10)</small></div>
+</div>
+<div class="b-player">
+<button class="play" id="bPlay" aria-label="Play binaural beat">▶</button>
+<div class="b-player-text"><strong>PLAY BINAURAL BEAT</strong><span id="bState">READY</span></div>
+</div>
+<div class="volume"><span>VOLUME</span><input id="bVolume" type="range" min="0" max="100" value="70"><span id="bPct">70%</span></div>
+<div class="headphones">◉ &nbsp; Use headphones for the best experience.</div>
+</section>
+
+<button class="install" id="install">⇩ &nbsp; INSTALL APP<small>USE OFFLINE • ALWAYS WITH YOU</small></button>
+<div class="footer">SOUND A BETTER YOU</div>
+</main>
+
+<script>
+const frequencies=[174,285,396,417,432,528,639,741,852,888,963,1111];
+const beats=[['DELTA',2,'deep sleep'],['THETA',6,'meditation'],['ALPHA',10,'relaxation'],['BETA',20,'focus'],['GAMMA',40,'awareness']];
+
+const grid=document.getElementById('grid');
+const playBtn=document.getElementById('play');
+const nowFreq=document.getElementById('nowFreq');
+const nowState=document.getElementById('nowState');
+const volume=document.getElementById('volume');
+const pct=document.getElementById('pct');
+
+let ctx=null, osc=null, gain=null, current=432, playing=false;
+
+function ensure(){
+  if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)();
+  if(ctx.state==='suspended') ctx.resume();
+}
+function stopNormal(){
+  if(osc){try{osc.stop()}catch(e){} osc.disconnect(); osc=null}
+  playing=false;
+  playBtn.textContent='▶';
+  playBtn.classList.remove('stop-mode');
+  nowState.textContent='PAUSED';
+  updateWaveVisual();
+}
+function startNormal(){
+  ensure();
+  if(osc) return;
+  osc=ctx.createOscillator();
+  gain=ctx.createGain();
+  osc.type='sine';
+  osc.frequency.value=current;
+  gain.gain.value=Number(volume.value)/100*0.15;
+  osc.connect(gain).connect(ctx.destination);
+  osc.start();
+  playing=true;
+  playBtn.textContent='■';
+  playBtn.classList.add('stop-mode');
+  nowState.textContent='PLAYING';
+  updateWaveVisual();
+}
+function selectNormal(f,button){
+  stopBinaural();
+  document.querySelectorAll('.freq').forEach(b=>b.classList.remove('active'));
+  button.classList.add('active');
+  current=f;
+  targetWaveCycles=getWaveCycles(f);
+  nowFreq.textContent=f+' Hz';
+  updateWaveVisual();
+  if(playing && osc && ctx){
+    osc.frequency.setTargetAtTime(f,ctx.currentTime,.015);
+    nowState.textContent='PLAYING';
+  }else{
+    nowState.textContent='PAUSED';
+  }
+}
+frequencies.forEach(f=>{
+  const b=document.createElement('button');
+  b.className='freq'+(f===432?' active':'');
+  b.innerHTML=f+'<span>Hz</span>';
+  b.onclick=()=>selectNormal(f,b);
+  grid.appendChild(b);
+});
+
+playBtn.onclick=()=>{
+  if(playing) stopNormal();
+  else startNormal();
+};
+
+volume.oninput=()=>{
+  pct.textContent=volume.value+'%';
+  if(gain&&ctx) gain.gain.setTargetAtTime(Number(volume.value)/100*0.15,ctx.currentTime,.01);
+};
+
+// Binaural
+const bFreqGrid=document.getElementById('bFreqGrid');
+const beatGrid=document.getElementById('beatGrid');
+const leftTone=document.getElementById('leftTone');
+const beatTone=document.getElementById('beatTone');
+const rightTone=document.getElementById('rightTone');
+const rightFormula=document.getElementById('rightFormula');
+const bPlay=document.getElementById('bPlay');
+const bState=document.getElementById('bState');
+const bVolume=document.getElementById('bVolume');
+const bPct=document.getElementById('bPct');
+
+let carrier=432, beat=10, leftOsc=null, rightOsc=null, bGain=null, bPlaying=false;
+
+function updateBinauralDisplay(){
+  leftTone.innerHTML=carrier+' <span>Hz</span>';
+  beatTone.innerHTML=beat+' <span>Hz</span>';
+  rightTone.innerHTML=(carrier+beat)+' <span>Hz</span>';
+  rightFormula.textContent='('+carrier+' + '+beat+')';
+}
+function stopBinaural(){
+  if(leftOsc){try{leftOsc.stop()}catch(e){} leftOsc.disconnect(); leftOsc=null}
+  if(rightOsc){try{rightOsc.stop()}catch(e){} rightOsc.disconnect(); rightOsc=null}
+  if(bGain){bGain.disconnect();bGain=null}
+  bPlaying=false;
+  bPlay.textContent='▶';
+  bPlay.classList.remove('stop-mode');
+  bState.textContent='PAUSED';
+}
+function startBinaural(){
+  ensure();
+  stopBinaural();
+  const merger=ctx.createChannelMerger(2);
+  bGain=ctx.createGain();
+  bGain.gain.value=Number(bVolume.value)/100*0.12;
+  leftOsc=ctx.createOscillator();
+  rightOsc=ctx.createOscillator();
+  leftOsc.type='sine'; rightOsc.type='sine';
+  leftOsc.frequency.value=carrier;
+  rightOsc.frequency.value=carrier+beat;
+  leftOsc.connect(merger,0,0);
+  rightOsc.connect(merger,0,1);
+  merger.connect(bGain).connect(ctx.destination);
+  leftOsc.start(); rightOsc.start();
+  bPlaying=true;
+  bPlay.textContent='■';
+  bPlay.classList.add('stop-mode');
+  bState.textContent='PLAYING';
+}
+function selectBinauralFreq(f,button){
+  document.querySelectorAll('.b-freq').forEach(b=>b.classList.remove('active'));
+  button.classList.add('active');
+  carrier=f;
+  updateBinauralDisplay();
+
+  // Change the binaural carrier live if playback is already running.
+  if(bPlaying && leftOsc && rightOsc && ctx){
+    const now=ctx.currentTime;
+    leftOsc.frequency.setTargetAtTime(carrier,now,.015);
+    rightOsc.frequency.setTargetAtTime(carrier+beat,now,.015);
+    bState.textContent='PLAYING';
+  }
+}
+function selectBeat(value,button){
+  document.querySelectorAll('.beat').forEach(b=>b.classList.remove('active'));
+  button.classList.add('active');
+  beat=value;
+  updateBinauralDisplay();
+
+  // Change the binaural beat live if playback is already running.
+  if(bPlaying && leftOsc && rightOsc && ctx){
+    const now=ctx.currentTime;
+    rightOsc.frequency.setTargetAtTime(carrier+beat,now,.015);
+    bState.textContent='PLAYING';
+  }
+}
+frequencies.forEach(f=>{
+  const b=document.createElement('button');
+  b.className='b-freq'+(f===432?' active':'');
+  b.textContent=f;
+  b.onclick=()=>selectBinauralFreq(f,b);
+  bFreqGrid.appendChild(b);
+});
+beats.forEach(([name,value,desc])=>{
+  const b=document.createElement('button');
+  b.className='beat'+(value===10?' active':'');
+  b.innerHTML=name+'<br>'+value+' Hz<br><small>('+desc+')</small>';
+  b.onclick=()=>selectBeat(value,b);
+  beatGrid.appendChild(b);
+});
+bPlay.onclick=()=>{if(bPlaying)stopBinaural();else startBinaural()};
+bVolume.oninput=()=>{
+  bPct.textContent=bVolume.value+'%';
+  if(bGain&&ctx)bGain.gain.setTargetAtTime(Number(bVolume.value)/100*0.12,ctx.currentTime,.01);
+};
+updateBinauralDisplay();
+
+// Visual frequency wave
+const frequencyVisual=document.getElementById('frequencyVisual');
+const waveCanvas=document.getElementById('waveCanvas');
+const waveValue=document.getElementById('waveValue');
+const waveStatus=document.getElementById('waveStatus');
+const waveCtx=waveCanvas.getContext('2d');
+let waveDpr=1, waveWidth=0, waveHeight=0, wavePhase=0, waveFrame=null;
+let waveCycles=2.2, targetWaveCycles=2.2;
+
+function getWaveCycles(f){
+  const minF=174, maxF=1111;
+  const minCycles=1.35, maxCycles=4.2;
+  const t=(Math.log(f)-Math.log(minF))/(Math.log(maxF)-Math.log(minF));
+  return minCycles + Math.max(0,Math.min(1,t))*(maxCycles-minCycles);
+}
+
+function resizeWave(){
+  const rect=waveCanvas.getBoundingClientRect();
+  waveDpr=Math.min(window.devicePixelRatio||1,2);
+  waveWidth=rect.width;
+  waveHeight=rect.height;
+  waveCanvas.width=Math.max(1,Math.floor(rect.width*waveDpr));
+  waveCanvas.height=Math.max(1,Math.floor(rect.height*waveDpr));
+  waveCtx.setTransform(waveDpr,0,0,waveDpr,0,0);
+}
+function drawWave(){
+  if(!waveWidth||!waveHeight) resizeWave();
+  waveCtx.clearRect(0,0,waveWidth,waveHeight);
+
+  const center=waveHeight/2;
+  const amp=(waveHeight*.34)*(playing?1:.34);
+  targetWaveCycles=getWaveCycles(current);
+  waveCycles += (targetWaveCycles-waveCycles)*0.12;
+  const cycles=waveCycles;
+  const speed=playing?0.055:0.012;
+  wavePhase+=speed;
+
+  // Soft glow layers.
+  for(let layer=0;layer<3;layer++){
+    waveCtx.beginPath();
+    for(let x=0;x<=waveWidth;x+=2){
+      const t=x/waveWidth;
+      const y=center + Math.sin(t*Math.PI*2*cycles+wavePhase)*(amp*(1-layer*.13));
+      if(x===0) waveCtx.moveTo(x,y); else waveCtx.lineTo(x,y);
+    }
+    waveCtx.strokeStyle=layer===0?'rgba(168,60,255,.18)':layer===1?'rgba(168,60,255,.28)':'rgba(255,209,92,.22)';
+    waveCtx.lineWidth=layer===0?10:layer===1?5:2;
+    waveCtx.shadowBlur=layer===2?14:20;
+    waveCtx.shadowColor=layer===2?'rgba(255,209,92,.7)':'rgba(168,60,255,.7)';
+    waveCtx.stroke();
+  }
+  waveCtx.shadowBlur=0;
+
+  waveFrame=requestAnimationFrame(drawWave);
+}
+function updateWaveVisual(){
+  waveValue.textContent=current+' Hz';
+  waveStatus.textContent=playing?'PLAYING':'PAUSED';
+  frequencyVisual.classList.toggle('playing',playing);
+}
+window.addEventListener('resize',resizeWave);
+resizeWave();
+waveCycles=getWaveCycles(current);
+targetWaveCycles=waveCycles;
+updateWaveVisual();
+drawWave();
+
+// PWA install
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e});
+document.getElementById('install').onclick=async()=>{
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt=null;
+  }else if(/iphone|ipad|ipod/i.test(navigator.userAgent)){
+    alert('To install Deep Healing Vibes on iPhone or iPad: tap Share, then choose “Add to Home Screen”.');
+  }else if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone){
+    alert('Deep Healing Vibes is already installed.');
+  }else{
+    alert('Use your browser menu and choose “Install app” or “Add to Home screen”.');
+  }
+};
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=22'));
+}
+</script>
+
+<div class="dhv-legal">
+  <div class="dhv-legal-links">
+    <button type="button" onclick="dhvOpen('about')">About</button>
+    <button type="button" onclick="dhvOpen('disclaimer')">Disclaimer</button>
+    <button type="button" onclick="dhvOpen('privacy')">Privacy</button>
+  </div>
+  <div class="dhv-legal-copy">© 2026 Deep Healing Vibes</div>
+</div>
+
+
+<div class="dhv-modal" id="dhv-about" role="dialog" aria-modal="true" aria-labelledby="dhv-about-title">
+  <div class="dhv-card">
+    <button class="dhv-close" aria-label="Close" onclick="dhvClose('about')">×</button>
+    <h2 id="dhv-about-title">About Deep Healing Vibes</h2>
+    <p>Deep Healing Vibes is a wellness and mindful-listening experience featuring Solfeggio frequencies and binaural beat sessions.</p>
+    <p>The app is designed for personal listening, relaxation, meditation and focused moments.</p>
+  </div>
+</div>
+
+<div class="dhv-modal" id="dhv-disclaimer" role="dialog" aria-modal="true" aria-labelledby="dhv-disclaimer-title">
+  <div class="dhv-card">
+    <button class="dhv-close" aria-label="Close" onclick="dhvClose('disclaimer')">×</button>
+    <h2 id="dhv-disclaimer-title">Wellness Disclaimer</h2>
+    <p>Deep Healing Vibes is intended for relaxation, meditation and personal wellness experiences. It is not a medical device and is not intended to diagnose, treat, cure or prevent any disease or medical condition.</p>
+    <p>If you have a medical condition, are undergoing treatment, or have concerns about your health, consult a qualified healthcare professional.</p>
+    <p>Use headphones for binaural beats and listen at a comfortable volume.</p>
+  </div>
+</div>
+
+<div class="dhv-modal" id="dhv-privacy" role="dialog" aria-modal="true" aria-labelledby="dhv-privacy-title">
+  <div class="dhv-card">
+    <button class="dhv-close" aria-label="Close" onclick="dhvClose('privacy')">×</button>
+    <h2 id="dhv-privacy-title">Privacy Notice</h2>
+    <p>Deep Healing Vibes is designed to run locally in your browser. The app's audio generation uses the Web Audio API on your device.</p>
+    <p>This app does not require an account or ask you to enter personal information to use its core audio features.</p>
+    <p>This notice describes the standalone app itself. Any personal information you provide on a separate website, checkout, payment service or email service is governed by that service's own privacy notice.</p>
+  </div>
+</div>
+
+<script>
+function dhvOpen(name){
+  const el=document.getElementById('dhv-'+name);
+  if(el) el.classList.add('open');
+}
+function dhvClose(name){
+  const el=document.getElementById('dhv-'+name);
+  if(el) el.classList.remove('open');
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') document.querySelectorAll('.dhv-modal.open').forEach(m=>m.classList.remove('open'));
+});
+document.querySelectorAll('.dhv-modal').forEach(function(m){
+  m.addEventListener('click',function(e){ if(e.target===m) m.classList.remove('open'); });
+});
+</script>
+
+</body>
+</html>
