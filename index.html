@@ -105,7 +105,7 @@ input[type=range]{width:100%;accent-color:#a83cff}
 </main>
 
 <script>
-const frequencies=[174,285,396,417,432,528,639,741,852,888,963];
+const frequencies=[174,285,396,417,432,528,639,741,852,888,963,1111];
 const beats=[['DELTA',2,'deep sleep'],['THETA',6,'meditation'],['ALPHA',10,'relaxation'],['BETA',20,'focus'],['GAMMA',40,'awareness']];
 
 const grid=document.getElementById('grid');
@@ -270,7 +270,7 @@ document.getElementById('install').onclick=async()=>{
   }
 };
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=8'));
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=9'));
 }
 </script>
 </body>
