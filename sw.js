@@ -1,5 +1,5 @@
-const CACHE='deep-healing-vibes-v22';
-const STATIC=['./manifest.webmanifest','./dhv-icon-v22.svg','./dhv-icon-192-v22.png','./dhv-icon-512-v22.png'];
+const CACHE='deep-healing-vibes-v23';
+const STATIC=['./index.html','./manifest.webmanifest','./dhv-icon-v22.svg','./dhv-icon-192-v22.png','./dhv-icon-512-v22.png'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(STATIC)))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{
