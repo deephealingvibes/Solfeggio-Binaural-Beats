@@ -62,10 +62,26 @@ input[type=range]{width:100%;accent-color:#a83cff}
 .b-freq-grid{grid-template-columns:repeat(6,1fr)}.b-freq{font-size:10px;padding:9px 1px}
 }
 </style>
+
+<style id="dhv-legal-css">
+.dhv-legal{margin:28px auto 10px;max-width:720px;text-align:center}
+.dhv-legal-links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.dhv-legal-links button{background:none;border:0;color:rgba(255,255,255,.62);font:inherit;font-size:12px;cursor:pointer;padding:5px 7px}
+.dhv-legal-links button:hover{color:#f4c76b}
+.dhv-legal-copy{margin-top:6px;color:rgba(255,255,255,.35);font-size:10px}
+.dhv-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,3,20,.78);backdrop-filter:blur(10px)}
+.dhv-modal.open{display:flex}
+.dhv-card{width:min(680px,100%);max-height:82vh;overflow:auto;border:1px solid rgba(210,126,255,.25);border-radius:20px;padding:24px;background:linear-gradient(160deg,#17112e,#0b0a1c);box-shadow:0 20px 70px rgba(0,0,0,.5);color:rgba(255,255,255,.86);text-align:left}
+.dhv-card h2{margin:0 0 14px;color:#f4c76b;font-size:20px}
+.dhv-card h3{margin:18px 0 7px;color:#e5b6ff;font-size:14px}
+.dhv-card p{font-size:13px;line-height:1.65;margin:8px 0}
+.dhv-close{float:right;background:none;border:0;color:rgba(255,255,255,.65);font-size:24px;cursor:pointer}
+</style>
+
 </head>
 <body>
 <main class="app">
-<h1>DEEP HEALING VIBES APP</h1>
+<h1>DEEP HEALING VIBES</h1>
 <div class="sub">SOUND • BALANCE • HIGHER SELF</div>
 <div class="line"></div>
 <div class="phrase">TUNE • HEAL • BE • MORE</div>
@@ -288,8 +304,64 @@ document.getElementById('install').onclick=async()=>{
   }
 };
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=14'));
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=15'));
 }
 </script>
+
+<div class="dhv-legal">
+  <div class="dhv-legal-links">
+    <button type="button" onclick="dhvOpen('about')">About</button>
+    <button type="button" onclick="dhvOpen('disclaimer')">Disclaimer</button>
+    <button type="button" onclick="dhvOpen('privacy')">Privacy</button>
+  </div>
+  <div class="dhv-legal-copy">© 2026 Deep Healing Vibes</div>
+</div>
+
+<div class="dhv-modal" id="dhv-about" role="dialog" aria-modal="true" aria-labelledby="dhv-about-title">
+  <div class="dhv-card">
+    <button class="dhv-close" aria-label="Close" onclick="dhvClose('about')">×</button>
+    <h2 id="dhv-about-title">About Deep Healing Vibes</h2>
+    <p>Deep Healing Vibes is a wellness and mindful-listening experience featuring Solfeggio frequencies and binaural beat sessions.</p>
+    <p>The app is designed for personal listening, relaxation, meditation and focused moments.</p>
+  </div>
+</div>
+
+<div class="dhv-modal" id="dhv-disclaimer" role="dialog" aria-modal="true" aria-labelledby="dhv-disclaimer-title">
+  <div class="dhv-card">
+    <button class="dhv-close" aria-label="Close" onclick="dhvClose('disclaimer')">×</button>
+    <h2 id="dhv-disclaimer-title">Wellness Disclaimer</h2>
+    <p>Deep Healing Vibes is intended for relaxation, meditation and personal wellness experiences. It is not a medical device and is not intended to diagnose, treat, cure or prevent any disease or medical condition.</p>
+    <p>If you have a medical condition, are undergoing treatment, or have concerns about your health, consult a qualified healthcare professional.</p>
+    <p>Use headphones for binaural beats and listen at a comfortable volume.</p>
+  </div>
+</div>
+
+<div class="dhv-modal" id="dhv-privacy" role="dialog" aria-modal="true" aria-labelledby="dhv-privacy-title">
+  <div class="dhv-card">
+    <button class="dhv-close" aria-label="Close" onclick="dhvClose('privacy')">×</button>
+    <h2 id="dhv-privacy-title">Privacy Notice</h2>
+    <p>Deep Healing Vibes is designed to run locally in your browser. The app's audio generation uses the Web Audio API on your device.</p>
+    <p>This app does not require an account or ask you to enter personal information to use its core audio features.</p>
+    <p>This notice describes the standalone app itself. Any personal information you provide on a separate website, checkout, payment service or email service is governed by that service's own privacy notice.</p>
+  </div>
+</div>
+
+<script>
+function dhvOpen(name){
+  const el=document.getElementById('dhv-'+name);
+  if(el) el.classList.add('open');
+}
+function dhvClose(name){
+  const el=document.getElementById('dhv-'+name);
+  if(el) el.classList.remove('open');
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') document.querySelectorAll('.dhv-modal.open').forEach(m=>m.classList.remove('open'));
+});
+document.querySelectorAll('.dhv-modal').forEach(function(m){
+  m.addEventListener('click',function(e){ if(e.target===m) m.classList.remove('open'); });
+});
+</script>
+
 </body>
 </html>
