@@ -7,19 +7,19 @@
   "theme_color": "#09001c",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "dhv-icon-192-v22.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "dhv-icon-512-v22.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon.svg",
+      "src": "dhv-icon-v22.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"

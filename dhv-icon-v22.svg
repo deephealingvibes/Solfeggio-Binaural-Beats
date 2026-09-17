@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#17052f"/>
+    <stop offset="52%" stop-color="#5a16a8"/>
+    <stop offset="100%" stop-color="#24054b"/>
+  </linearGradient>
+  <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur stdDeviation="5" result="blur"/>
+    <feMerge>
+      <feMergeNode in="blur"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+</defs>
+<rect width="512" height="512" rx="78" fill="url(#bg)"/>
+<path d="M58 256
+         C88 256 94 256 110 256
+         C128 256 130 216 146 216
+         C162 216 164 296 180 296
+         C196 296 198 176 214 176
+         C230 176 232 336 248 336
+         C264 336 266 136 282 136
+         C298 136 300 376 316 376
+         C332 376 334 96 350 96
+         C366 96 368 416 384 416
+         C400 416 402 256 418 256
+         C436 256 442 256 454 256"
+      fill="none"
+      stroke="#ffd45a"
+      stroke-width="12"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      filter="url(#glow)"/>
+<path d="M58 256
+         C88 256 94 256 110 256
+         C128 256 130 216 146 216
+         C162 216 164 296 180 296
+         C196 296 198 176 214 176
+         C230 176 232 336 248 336
+         C264 336 266 136 282 136
+         C298 136 300 376 316 376
+         C332 376 334 96 350 96
+         C366 96 368 416 384 416
+         C400 416 402 256 418 256
+         C436 256 442 256 454 256"
+      fill="none"
+      stroke="#ffe07a"
+      stroke-width="7"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+</svg>
