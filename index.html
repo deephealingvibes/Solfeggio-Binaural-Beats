@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#09001c">
-<meta name="description" content="Deep Healing Vibes App — Solfeggio and Solfeggio-based binaural beats">
+<meta name="description" content="Deep Healing Vibes — Solfeggio and Solfeggio-based binaural beats">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="./icon.svg">
-<title>Deep Healing Vibes App</title>
+<title>Deep Healing Vibes</title>
 <style>
 *{box-sizing:border-box}
 :root{--bg:#09001c;--panel:rgba(16,1,35,.72);--violet:#a83cff;--gold:#ffd15c;--text:#fffaff;--muted:#d8b9ed}
@@ -224,18 +224,31 @@ function startBinaural(){
   bState.textContent='PLAYING';
 }
 function selectBinauralFreq(f,button){
-  stopBinaural();
   document.querySelectorAll('.b-freq').forEach(b=>b.classList.remove('active'));
   button.classList.add('active');
   carrier=f;
   updateBinauralDisplay();
+
+  // Change the binaural carrier live if playback is already running.
+  if(bPlaying && leftOsc && rightOsc && ctx){
+    const now=ctx.currentTime;
+    leftOsc.frequency.setTargetAtTime(carrier,now,.015);
+    rightOsc.frequency.setTargetAtTime(carrier+beat,now,.015);
+    bState.textContent='PLAYING';
+  }
 }
 function selectBeat(value,button){
-  stopBinaural();
   document.querySelectorAll('.beat').forEach(b=>b.classList.remove('active'));
   button.classList.add('active');
   beat=value;
   updateBinauralDisplay();
+
+  // Change the binaural beat live if playback is already running.
+  if(bPlaying && leftOsc && rightOsc && ctx){
+    const now=ctx.currentTime;
+    rightOsc.frequency.setTargetAtTime(carrier+beat,now,.015);
+    bState.textContent='PLAYING';
+  }
 }
 frequencies.forEach(f=>{
   const b=document.createElement('button');
@@ -267,15 +280,15 @@ document.getElementById('install').onclick=async()=>{
     await deferredPrompt.userChoice;
     deferredPrompt=null;
   }else if(/iphone|ipad|ipod/i.test(navigator.userAgent)){
-    alert('To install Deep Healing Vibes App on iPhone or iPad: tap Share, then choose “Add to Home Screen”.');
+    alert('To install Deep Healing Vibes on iPhone or iPad: tap Share, then choose “Add to Home Screen”.');
   }else if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone){
-    alert('Deep Healing Vibes App is already installed.');
+    alert('Deep Healing Vibes is already installed.');
   }else{
     alert('Use your browser menu and choose “Install app” or “Add to Home screen”.');
   }
 };
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=12'));
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=14'));
 }
 </script>
 </body>
