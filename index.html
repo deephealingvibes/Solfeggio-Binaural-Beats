@@ -64,7 +64,7 @@ input[type=range]{width:100%;accent-color:#a83cff}
 </style>
 
 <style id="dhv-legal-css">
-.dhv-legal{margin:28px auto 10px;max-width:720px;width:100%;text-align:center}
+.dhv-legal{display:block;position:relative;clear:both;float:none;width:100%;max-width:720px;margin:32px auto 16px;padding:0;text-align:center;box-sizing:border-box}
 .dhv-legal-links{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:100%}
 .dhv-legal-links button{background:none;border:0;color:rgba(255,255,255,.62);font:inherit;font-size:12px;cursor:pointer;padding:5px 7px}
 .dhv-legal-links button:hover{color:#f4c76b}
@@ -78,6 +78,14 @@ input[type=range]{width:100%;accent-color:#a83cff}
 .dhv-close{float:right;background:none;border:0;color:rgba(255,255,255,.65);font-size:24px;cursor:pointer}
 </style>
 
+<style id="dhv-page-layout">
+html,body{min-height:100%}
+body{display:flex!important;flex-direction:column!important;justify-content:flex-start!important;align-items:stretch!important}
+main.app{display:block!important;width:min(100%,720px)!important;margin:0 auto!important;flex:0 0 auto!important;box-sizing:border-box!important}
+.dhv-legal{display:block!important;position:relative!important;width:100%!important;max-width:720px!important;margin:28px auto 16px!important;padding:0!important;float:none!important;clear:both!important;flex:0 0 auto!important;align-self:center!important;box-sizing:border-box!important;text-align:center!important}
+.dhv-legal-links{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;width:100%!important;gap:3px!important}
+.dhv-legal-copy{display:block!important;width:100%!important;text-align:center!important;margin-top:8px!important}
+</style>
 </head>
 <body>
 <main class="app">
@@ -304,7 +312,7 @@ document.getElementById('install').onclick=async()=>{
   }
 };
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=16'));
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=19'));
 }
 </script>
 
@@ -316,6 +324,7 @@ if('serviceWorker' in navigator){
   </div>
   <div class="dhv-legal-copy">© 2026 Deep Healing Vibes</div>
 </div>
+
 
 <div class="dhv-modal" id="dhv-about" role="dialog" aria-modal="true" aria-labelledby="dhv-about-title">
   <div class="dhv-card">
